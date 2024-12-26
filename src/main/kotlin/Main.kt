@@ -7,11 +7,11 @@ import serializers.ToDoListSerializer
 import java.io.File
 import java.io.FileNotFoundException
 
-val filePath = "${System.getProperty("user.home")}/clitodolist/tasks.json"
-const val version = "0.1"
+val filePath = "${System.getProperty("user.home")}/clitodolist/tasks.json" // Storage path
+const val version = "0.1" // Program version
 
 fun main(args: Array<String>) {
-    val toDoList = accessOrInitializeToDoList() ?: return
+    var toDoList = accessOrInitializeToDoList() ?: return // If null is returned, break the program
 
     try {
         when (args.getOrNull(0)) {
@@ -19,11 +19,13 @@ fun main(args: Array<String>) {
                 val arg2 = args.getOrNull(1)
 
                 if (arg2 == null) {
+                    // Print all tasks with id and info
                     toDoList.tasks.forEachIndexed { id, task -> println("ID: $id | $task") }
                 } else if (arg2.matches("^[0-9]+$".toRegex())) {
                     val id = arg2.toInt()
                     val task = toDoList.tasks.getOrNull(id) ?: throw TaskNotFoundException(id)
 
+                    // Print a specific task info, without its provided id to avoid redundancy
                     println(task)
                 } else {
                     val status = when (arg2) {
@@ -33,6 +35,7 @@ fun main(args: Array<String>) {
                         else -> throw ArgumentFormatException("status", "todo | in-progress | done")
                     }
 
+                    // Print all tasks id and info, filtered by its status
                     toDoList.tasks.filter { it.status == status }
                         .forEachIndexed { id, task -> println("ID: $id | $task") }
                 }
@@ -96,9 +99,14 @@ fun main(args: Array<String>) {
                 println("v$version")
             }
 
+            "reset" -> {
+                // Create a new empty to-do list and overwrite the potentially violated one
+                toDoList = ToDoList()
+            }
+
             null -> {
                 println("CLI to-do list made in Kotlin by Caio de Araújo.")
-                println("Github: https://github.com/caiotdearaujo")
+                println("Github: https://github.com/caiotdearaujo/clitodolist")
                 println("Version: $version")
             }
 
@@ -126,9 +134,13 @@ fun accessOrInitializeToDoList(): ToDoList? {
 
         return deserializedToDoList
     } catch (e: FileNotFoundException) {
+        // If no stored to-do list is found, a new one is created
         return ToDoList()
     } catch (e: ViolatedFileException) {
+        // To recover the program, it is necessary to run `reset` command
         println(e.message)
+
+        // Null breaks the program
         return null
     }
 }
@@ -137,6 +149,6 @@ fun saveToDoList(toDoList: ToDoList) {
     val jsonString = Json.encodeToString(ToDoListSerializer, toDoList)
     val file = File(filePath)
 
-    file.parentFile?.mkdirs()
+    file.parentFile?.mkdirs() // Create program directory if it doesn't exist
     file.writeText(jsonString)
 }

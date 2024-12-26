@@ -45,7 +45,9 @@ object TaskSerializer: KSerializer<Task> {
             return Task(description, status).apply { this.createdAt = createdAt; this.updatedAt = updatedAt }
         } catch (e: Exception) {
             when (e) {
-                is NullPointerException, is IllegalArgumentException -> throw ViolatedFileException()
+                is NullPointerException /* If key does not exist */,
+                is IllegalArgumentException /* If description is blank */ ->
+                    throw ViolatedFileException()
                 else -> throw e
             }
         }
