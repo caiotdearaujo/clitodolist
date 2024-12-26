@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileNotFoundException
 
 val filePath = "${System.getProperty("user.home")}/clitodolist/tasks.json" // Storage path
-const val version = "0.1" // Program version
+const val version = "0.1.0" // Program version
 
 fun main(args: Array<String>) {
     var toDoList = accessOrInitializeToDoList() ?: return // If null is returned, break the program
@@ -105,8 +105,8 @@ fun main(args: Array<String>) {
             }
 
             null -> {
-                println("CLI to-do list made in Kotlin by Caio de Araújo.")
-                println("Github: https://github.com/caiotdearaujo/clitodolist")
+                println("CLI to-do list made in Kotlin.")
+                println("Source code: https://github.com/caiotdearaujo/clitodolist")
                 println("Version: $version")
             }
 
