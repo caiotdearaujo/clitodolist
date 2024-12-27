@@ -42,7 +42,7 @@ object Help {
 
         CommandHelp("help", listOf(
             ParamHelp("List all commands, parameters and descriptions."),
-            ParamHelp("[command]", "List specific parameters and description for the specified command.")
+            ParamHelp("[command]", "List specific parameters and descriptions for the specified command.")
         ))
     )
 
