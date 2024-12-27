@@ -1,3 +1,5 @@
+package util
+
 import java.text.SimpleDateFormat
 
 object DateFormatter: SimpleDateFormat("HH:mm yyyy-MM-dd") {

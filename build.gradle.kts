@@ -3,8 +3,8 @@ plugins {
     kotlin("plugin.serialization") version "2.1.0"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "dev.caiotdearaujo"
+version = "0.1.1"
 
 repositories {
     mavenCentral()

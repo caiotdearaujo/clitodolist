@@ -1,7 +1,7 @@
 package serializers
 
-import Status
-import Task
+import todolist.Status
+import todolist.Task
 import errors.ViolatedFileException
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -15,7 +15,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import java.util.*
 
 object TaskSerializer: KSerializer<Task> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Task") {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("todolist.Task") {
         element<String>("description")
         element<Status>("status")
         element<Long>("createdAt")
