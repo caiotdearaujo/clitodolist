@@ -2,7 +2,6 @@ package util
 
 import todolist.Status
 import todolist.ToDoList
-import todolist.ToDoListFile
 import errors.ArgumentFormatException
 import errors.MissingArgumentError
 import errors.TaskNotFoundException
@@ -14,7 +13,7 @@ import java.util.*
 object CommandProcessor {
     fun process(args: Array<String>) {
         try {
-            val toDoList = ToDoListFile.accessOrInitialize()
+            val toDoList = ToDoList.accessOrInitialize()
 
             when (args.getOrNull(0)?.lowercase(Locale.getDefault())) {
                 "list" -> processList(args, toDoList)
@@ -29,7 +28,7 @@ object CommandProcessor {
                 else -> processUnknownCommand(args)
             }
 
-            ToDoListFile.write(toDoList)
+            toDoList.write()
         } catch (e: Exception) {
             handleError(e)
         }

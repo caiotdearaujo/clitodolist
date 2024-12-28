@@ -1,13 +1,16 @@
 package todolist
 
-import errors.MissingArgumentError
 import errors.TaskNotFoundException
+import kotlinx.serialization.json.Json
+import serializers.ToDoListSerializer
+import java.io.File
+import java.io.FileNotFoundException
 
 class ToDoList {
     var tasks = mutableListOf<Task>()
 
     fun listTask(id: Int) {
-        println(tasks.getOrNull(id) ?: throw MissingArgumentError("id"))
+        println(tasks.getOrNull(id) ?: throw TaskNotFoundException(id))
     }
 
     fun listTasks() {
@@ -15,9 +18,8 @@ class ToDoList {
     }
 
     fun listTasks(status: Status) {
-        tasks
-            .filter { it.status == status }
-            .forEachIndexed { id, task -> println("ID: $id | $task") }
+        tasks.mapIndexed { index, task -> index to task }.filter { (_, task) -> task.status == status }
+            .forEach { (id, task) -> println("ID: $id | $task") }
     }
 
     fun addTask(description: String) {
@@ -58,4 +60,29 @@ class ToDoList {
     }
 
     fun clear() = tasks.clear()
+
+    fun write() {
+        val jsonString = Json.encodeToString(ToDoListSerializer, this)
+        val file = File(filePath)
+
+        file.parentFile?.mkdirs() // Create program directory if it doesn't exist
+        file.writeText(jsonString)
+    }
+
+    companion object {
+        private val filePath = "${System.getProperty("user.home")}/clitodolist/tasks.json"
+
+        fun accessOrInitialize(): ToDoList {
+            try {
+                val jsonString = File(filePath).readText()
+                val deserializedToDoList = Json.decodeFromString(ToDoListSerializer, jsonString)
+
+                return deserializedToDoList
+            } catch (e: FileNotFoundException) {
+                println("A to-do list file was not found. Creating a new one in $filePath.")
+
+                return ToDoList()
+            }
+        }
+    }
 }

@@ -9,7 +9,7 @@ class Task(
 ) {
     var description: String = ""
         set(value) {
-            if (value.isBlank()) throw IllegalArgumentException("todolist.Task description must not be empty")
+            if (value.isBlank()) throw IllegalArgumentException("Task description must not be empty")
             field = value
             updatedAt = Date()
         }
@@ -28,7 +28,7 @@ class Task(
 
     override fun toString(): String {
         return "Description: $description | " +
-                "todolist.Status: ${status.toFormattedString()} | " +
+                "Status: ${status.toFormattedString()} | " +
                 "Last updated at: ${DateFormatter.format(updatedAt)} | " +
                 "Created at: ${DateFormatter.format(createdAt)}"
     }
